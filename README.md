@@ -9,4 +9,3 @@
 ### Ссылка на проект:
 
 ### Ссылка на облако с проектом:
-https://drive.google.com/drive/folders/1fodu-LDwQUJ6-2n_oHv-LpDgSpB7T3AZ?usp=sharing
