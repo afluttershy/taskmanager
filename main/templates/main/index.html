@@ -1,0 +1,21 @@
+{% extends 'main/base.html' %}
+
+{% block title %}
+     {{ title }}
+{% endblock %}
+
+{% block content %}
+    <h1 class="text-center">Список задач</h1>
+    {% if tasks %}
+        {% for el in tasks %}
+            <div class="alert alert-primary mt-2">
+                <h3>{{ el.title }}</h3>
+                <p>{{ el.task }}</p>
+                <a class="btn btn-outline-primary" href="edit/{{el.id}}">Изменить</a>
+                <a class="btn btn-outline-danger" href="delete/{{el.id}}">Удалить</a>
+            </div>
+        {% endfor %}
+    {% else %}
+        <p>Нет записей!</p>
+    {% endif %}
+{% endblock %}
