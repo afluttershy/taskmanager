@@ -1,3 +1,6 @@
+from itertools import count
+
+from django.db.models import Count
 from django.shortcuts import render, redirect, HttpResponseRedirect
 from .models import Task
 from .forms import TaskForm
@@ -10,12 +13,24 @@ from django.core import serializers
 import json
 from django.core.serializers.json import DjangoJSONEncoder
 from django.http import HttpResponse
+from qsstats import QuerySetStats
+from datetime import date
+
+
 # Create your views here.
 
 
 def index(request):
     tasks = Task.objects.all()
-    return render(request, 'main/index.html', {'title': 'Список задач', 'tasks': tasks})
+    start_date = date(2021, 1, 27)
+    end_date = date.today()
+
+    queryset = Task.objects.all()
+    # считаем количество платежей...
+    qsstats = QuerySetStats(queryset, date_field='date', aggregate=Count('id'))
+    # ...в день за указанный период
+    values = qsstats.time_series(start_date, end_date, interval='days')
+    return render(request, 'main/index.html', {'title': 'Список задач', 'tasks': tasks, 'values': values})
 
 
 def about(request):
@@ -69,11 +84,8 @@ def gettasks(request):
     tasks_json = serializers.serialize('json', tasks)
     return HttpResponse(tasks_json, content_type='application/json')
 
+
 # serializers.serialize('json', tasks, fields=('title', 'task'))
 class TaskViewSet(viewsets.ModelViewSet):
     queryset = Task.objects.all()
     serializer_class = TaskSerializer
-
-
-
-
